@@ -1,6 +1,6 @@
 <template>
-  <div>
-    123
+  <div class="coupon-manage">
+    优惠券管理
   </div>
 </template>
 
