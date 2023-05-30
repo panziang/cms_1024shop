@@ -1,6 +1,6 @@
 <template>
-  <div class="coupon-manage">
-    优惠券管理
+  <div>
+    not-found
   </div>
 </template>
 

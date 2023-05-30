@@ -5,7 +5,7 @@ import { requestPost, requestGet } from './request'
 
 // const apiBaseURL = import.meta.env.VITE_API_BASE_URL || null
 // const apiBaseURL = 'http://localhost:9000/user-server/api'
-const apiBaseURL = '/product-server'
+const apiBaseURL = '/user-server'
 
 /**
  * 查询xxxx数据
@@ -17,15 +17,18 @@ const apiBaseURL = '/product-server'
 //   requestGet('/home/info_list/xxxxxx', param, apiBaseURL, successResponse, errorResponse)
 // }
 
-//获取商品列表
-export function getProductList (param, successResponse, errorResponse) {
-  requestGet('/api/product/v1/page_product_list', param, apiBaseURL, successResponse, errorResponse)
+//获取用户列表
+export function getUserList (param, successResponse, errorResponse) {
+  requestGet('/api/user/v1/page', param, apiBaseURL, successResponse, errorResponse)
 }
 
-//获取轮播图
-export function getSwiperList (param, successResponse, errorResponse) {
-  requestGet('/api/banner/v1/list', param, apiBaseURL, successResponse, errorResponse)
+//获取收货地址列表
+export function getAddressList (param, successResponse, errorResponse) {
+  requestGet('/api/address/v1/list', param, apiBaseURL, successResponse, errorResponse)
 }
+
+
+
 
 
 
