@@ -30,11 +30,7 @@ const indexRoutes = [
       {
         path: "user-manage",
         component: () => import("@/views/main/user/user-manage.vue")
-      },
-      {
-        path: "address-manage",
-        component: () => import("@/views/main/user/address-manage.vue")
-      },
+      }
     ]
   },
   {

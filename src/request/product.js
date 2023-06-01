@@ -22,6 +22,10 @@ export function getProductList (param, successResponse, errorResponse) {
   requestGet('/api/product/v1/page_product_list', param, apiBaseURL, successResponse, errorResponse)
 }
 
+//删除指定商品
+export function delProductById (param, successResponse, errorResponse) {
+  requestGet('/api/product/v1/delete_product', param, apiBaseURL, successResponse, errorResponse)
+}
 
 
 

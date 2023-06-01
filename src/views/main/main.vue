@@ -19,7 +19,6 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item index="/main/user-manage" class="nav-menu__menu-item">用户管理</el-menu-item>
-              <el-menu-item index="/main/address-manage" class="nav-menu__menu-item">地址管理</el-menu-item>
 
             </el-sub-menu>
 
@@ -75,8 +74,6 @@
             </i>
 
             <div class="nav-header-content">
-              <yn-breadcrumb :breadcrumbs="breadcrumbs" />
-              <user-info :username="username" />
             </div>
           </div>
         </el-header>

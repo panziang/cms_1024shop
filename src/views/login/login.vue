@@ -55,7 +55,6 @@
         </el-col>
       </el-row>
     </div>
-    <CopyrightSection />
   </div>
 </template>
 

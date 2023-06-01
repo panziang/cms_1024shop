@@ -22,10 +22,13 @@ export function getUserList (param, successResponse, errorResponse) {
   requestGet('/api/user/v1/page', param, apiBaseURL, successResponse, errorResponse)
 }
 
-//获取收货地址列表
-export function getAddressList (param, successResponse, errorResponse) {
-  requestGet('/api/address/v1/list', param, apiBaseURL, successResponse, errorResponse)
+//删除用户
+export function delUserById (param, successResponse, errorResponse) {
+  requestGet(`/api/user/v1/admin_delete/${param.user_id}`, param, apiBaseURL, successResponse, errorResponse)
 }
+
+
+
 
 
 

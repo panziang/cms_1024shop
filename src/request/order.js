@@ -22,6 +22,11 @@ export function getOrderList (param, successResponse, errorResponse) {
   requestGet('/api/order/v1/page', param, apiBaseURL, successResponse, errorResponse)
 }
 
+//删除订单项
+export function delOrderById (param, successResponse, errorResponse) {
+  requestGet('/api/order/v1/delete', param, apiBaseURL, successResponse, errorResponse)
+}
+
 
 
 

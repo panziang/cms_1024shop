@@ -22,6 +22,13 @@ export function getCouponList (param, successResponse, errorResponse) {
   requestGet('/api/coupon/v1/page_coupon_list_admin', param, apiBaseURL, successResponse, errorResponse)
 }
 
+//获取优惠券列表
+export function delCouponById (param, successResponse, errorResponse) {
+  requestPost(`/api/coupon/v1/delete/${param.cid}`, param, apiBaseURL, successResponse, errorResponse)
+}
+
+
+
 
 
 
