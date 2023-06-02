@@ -22,10 +22,17 @@ export function getCouponList (param, successResponse, errorResponse) {
   requestGet('/api/coupon/v1/page_coupon_list_admin', param, apiBaseURL, successResponse, errorResponse)
 }
 
-//获取优惠券列表
+//删除优惠券
 export function delCouponById (param, successResponse, errorResponse) {
   requestPost(`/api/coupon/v1/delete/${param.cid}`, param, apiBaseURL, successResponse, errorResponse)
 }
+
+//新增优惠券
+export function addCoupon (param, successResponse, errorResponse) {
+  requestPost('/api/coupon/v1/add_new_coupon', param, apiBaseURL, successResponse, errorResponse)
+}
+
+
 
 
 

@@ -4,13 +4,26 @@
       <h1>订单管理</h1>
     </div>
     <div class="table">
+      <div class="table-header">
+        <span>
+          订单列表
+        </span>
+      </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="70" align="center" />
-        <el-table-column prop="state" label="状态" width="100" align="center" />
+        <el-table-column prop="state" label="状态" width="80" align="center" />
         <el-table-column prop="nickname" label="昵称" align="center" min-width="70" />
         <el-table-column prop="create_time" label="创建时间" width="180" align="center" />
         <el-table-column prop="total_price" label="总价" align="center" width="70" />
         <el-table-column prop="pay_price" label="支付价格" width="90" align="center" />
+        <el-table-column label="商品信息" min-width="90" align="center">
+          <template #default="scope">
+            <p v-for="i in scope.row.order_item_list" :key="i.index">
+              {{ i.product_name }}
+            </p>
+
+          </template>
+        </el-table-column>
         <el-table-column label="收货信息" align="center" min-width="200">
           <!-- addressInfo.value = `${addressData.value
             .province} ${addressData.value.city} ${addressData.value.region} ${addressData.value.detailAddress}` -->
@@ -90,6 +103,7 @@
             item.receiver_address = `${item.receiver_address.receiveName} ${item.receiver_address.phone} ${item.receiver_address.province}${item.receiver_address.city}${item.receiver_address.region}${item.receiver_address.detailAddress}`
             item.state = item.state == 'PAY' ? '已支付' : '已取消'
             item.create_time = getResTime(item.create_time)
+            item.del = item.del == 1 ? true : false
           })
           console.log("tableData.value", tableData.value);
           listCount.value = data.data.total_records
@@ -122,6 +136,7 @@
   }
   const cancelClick = () => {
     confirmId.value = ''
+    dialogVisible.value = false
   }
   const delOrder = (oid) => {
     delOrderById(
@@ -165,6 +180,7 @@
   // height: 600px;
   // margin-bottom: 50px;
   // border: 1px solid red;
+  padding: 0 20px;
 
   .title {
     text-align: center;
@@ -173,6 +189,20 @@
 
   .table {
     margin-top: 80px;
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      span {
+        padding-bottom: 6px;
+        padding-right: 12px;
+        border-bottom: 3px solid #79bbff;
+        font-size: 20px;
+      }
+    }
   }
 
   .pagination {

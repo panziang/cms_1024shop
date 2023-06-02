@@ -4,6 +4,17 @@
       <h1>商品管理</h1>
     </div>
     <div class="table">
+      <div class="table-header">
+        <span>
+          商品列表
+        </span>
+        <el-button type="primary" @click="addClick">
+          <el-icon>
+            <Plus />
+          </el-icon>
+          新建
+        </el-button>
+      </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" max-width="70" align="center" />
         <el-table-column prop="title" label="商品名" width="200" align="center" />
@@ -34,6 +45,7 @@
         @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
 
+    <!-- 删除dialog -->
     <el-dialog v-model="dialogVisible" title="提示" width="30%">
       <span>确定删除吗？</span>
       <template #footer>
@@ -46,12 +58,62 @@
       </template>
     </el-dialog>
 
+    <!-- 新增dialog -->
+    <el-dialog v-model="dialogFormVisible" title="新增商品" width="50%" center>
+      <el-form :model="product">
+        <el-form-item label="商品名" :label-width="formLabelWidth">
+          <el-input v-model="product.title" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="商品价格" :label-width="formLabelWidth">
+          <el-input v-model="product.price" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="商品库存" :label-width="formLabelWidth">
+          <el-input v-model="product.stock" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="商品图片" :label-width="formLabelWidth">
+          <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
+            :http-request="handleFileUpload1">
+            <template #trigger>
+              <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
+            </template>
+
+            <el-button type="success" @click="submitUploadImg">
+              上传
+            </el-button>
+
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item label="商品详情" :label-width="formLabelWidth">
+          <el-upload ref="uploadRef2" class="upload-demo" action="" :auto-upload="false"
+            :http-request="handleFileUpload2">
+            <template #trigger>
+              <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
+            </template>
+
+            <el-button type="success" @click="submitUploadDetail">
+              上传
+            </el-button>
+          </el-upload>
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmAdd">
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup>
-  import { getProductList, delProductById } from '@/request/product'
-  import { onMounted, ref } from 'vue';
+  import { getProductList, delProductById, addProduct, getProductImg } from '@/request/product'
+  import { onMounted, ref, reactive } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
 
   //分页数据
@@ -102,6 +164,7 @@
     )
   }
 
+  //删除操作
   const dialogVisible = ref(false)
   const handleDelete = (index, row) => {
     console.log(index, row);
@@ -116,6 +179,7 @@
   }
   const cancelClick = () => {
     confirmId.value = 0
+    dialogVisible.value = false
   }
   const delProduct = (pid) => {
     delProductById(
@@ -147,6 +211,118 @@
       }
     )
   }
+
+  //新增操作
+  const dialogFormVisible = ref(false)
+  const formLabelWidth = '140px'
+  const product = reactive({
+    title: '',
+    cover_img: '',
+    detail: '',
+    price: '',
+    stock: ''
+  })
+
+  //上传
+  const uploadRef1 = ref()
+  const handleFileUpload1 = (myfile) => {
+    console.log("file111", myfile);
+    getProductImg(
+      {
+        file: myfile.file
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        product.cover_img = data.data
+        console.log("product.cover_img", product.cover_img);
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  const submitUploadImg = () => {
+    // console.log("uploadRef1", uploadRef1.value);
+    // console.log("fileData", fileData.value);
+    uploadRef1.value.submit()
+  }
+
+  const uploadRef2 = ref()
+  const handleFileUpload2 = (myfile) => {
+    console.log("file222", myfile);
+    getProductImg(
+      {
+        file: myfile.file
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        product.detail = data.data
+        console.log("product.detail", product.detail);
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  const submitUploadDetail = () => {
+    console.log("uploadRef2", uploadRef2.value);
+    uploadRef2.value.submit()
+  }
+  const addClick = () => {
+    dialogFormVisible.value = true
+    console.log("123");
+  }
+  const newProduct = () => {
+    addProduct(
+      {
+        title: product.title,
+        price: product.price,
+        stock: product.stock,
+        cover_img: product.cover_img,
+        detail: product.detail,
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          console.log("新增成功");
+          PromptMessage.messageSuccess('新增成功')
+          getTableData()
+
+        } else {
+          console.log("新增失败");
+          PromptMessage.messageWarning('新增失败')
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("新增失败");
+        PromptMessage.messageBoxError('新增失败', msg)
+      }
+    )
+  }
+  const confirmAdd = () => {
+    console.log("确定新增");
+    newProduct()
+    dialogFormVisible.value = false
+  }
   onMounted(() => {
     getTableData()
   })
@@ -163,7 +339,22 @@
   }
 
   .table {
-    margin-top: 80px;
+    margin-top: 40px;
+    padding: 0 20px;
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      span {
+        padding-bottom: 6px;
+        padding-right: 12px;
+        border-bottom: 3px solid #79bbff;
+        font-size: 20px;
+      }
+    }
   }
 
   .pagination {

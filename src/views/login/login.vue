@@ -187,6 +187,60 @@
       }
     })
   }
+
+  //验证码
+  const codeText = ref('发送验证码')
+  const codeDisabled = ref(false)
+  const getCode = () => {
+    loginCodeFormRef.value.validateField('phone', (res) => {
+      if (res) {
+        sendCode(
+          {
+            content: loginForm.phone,
+          },
+          (status, res, data) => {
+            console.log('status: ', status)
+            console.log('res: ', res)
+            console.log('data: ', data)
+
+            if (data.status == '200') {
+              PromptMessage.messageSuccess('发送成功')
+              tackBtn();
+            } else {
+              PromptMessage.messageError('发送失败')
+            }
+          },
+          (status, error, msg) => {
+            console.log('status: ', status)
+            console.log('error: ', error)
+            console.log('msg: ', msg)
+            PromptMessage.messageBoxError('发送失败', msg)
+          }
+        )
+
+      }
+      else {
+        PromptMessage.messageError('请输入正确手机号')
+        return
+      }
+    })
+    console.log("getCode");
+
+  }
+  const tackBtn = () => {
+    let time = 60;
+    let timer = setInterval(() => {
+      if (time == 0) {
+        clearInterval(timer);
+        codeText.value = '获取验证码';
+        codeDisabled.value = false;
+      } else {
+        codeDisabled.value = true;
+        codeText.value = time + '秒后重试';
+        time--;
+      }
+    }, 1000);
+  }
   onMounted(() => {
 
   })

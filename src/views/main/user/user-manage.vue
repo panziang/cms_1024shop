@@ -4,6 +4,11 @@
       <h1>用户管理</h1>
     </div>
     <div class="table">
+      <div class="table-header">
+        <span>
+          用户列表
+        </span>
+      </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="100" align="center" />
         <el-table-column prop="name" label="姓名" width="140" align="center" />
@@ -116,6 +121,7 @@
   }
   const cancelClick = () => {
     confirmId.value = 0
+    dialogVisible.value = false
   }
 
   const delUser = (uid) => {
@@ -165,6 +171,20 @@
 
   .table {
     margin-top: 80px;
+
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+
+      span {
+        padding-bottom: 6px;
+        padding-right: 12px;
+        border-bottom: 3px solid #79bbff;
+        font-size: 20px;
+      }
+    }
   }
 
   .pagination {
