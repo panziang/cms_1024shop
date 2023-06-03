@@ -38,6 +38,20 @@ export function delProductById (param, successResponse, errorResponse) {
   requestGet('/api/product/v1/delete_product', param, apiBaseURL, successResponse, errorResponse)
 }
 
+//更新商品信息
+export function editProduct (param, successResponse, errorResponse) {
+  requestPost('/api/product/v1/update_product', param, apiBaseURL, successResponse, errorResponse)
+}
+
+//指定商品详情
+export function getProductById (param, successResponse, errorResponse) {
+  requestGet(`/api/product/v1/detail/${param.pid}`, param, apiBaseURL, successResponse, errorResponse)
+}
+
+
+
+
+
 
 
 

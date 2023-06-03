@@ -29,6 +29,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="price" label="价格" max-width="100" align="center" />
+        <el-table-column prop="old_price" label="原价" max-width="100" align="center" />
         <el-table-column prop="stock" label="库存" align="center" max-width="70" />
 
         <el-table-column label="操作" align="center" width="200">
@@ -67,6 +68,11 @@
         <el-form-item label="商品价格" :label-width="formLabelWidth">
           <el-input v-model="product.price" autocomplete="off" />
         </el-form-item>
+
+        <el-form-item label="商品原价" :label-width="formLabelWidth">
+          <el-input v-model="product.old_price" autocomplete="off" />
+        </el-form-item>
+
         <el-form-item label="商品库存" :label-width="formLabelWidth">
           <el-input v-model="product.stock" autocomplete="off" />
         </el-form-item>
@@ -108,11 +114,66 @@
       </template>
     </el-dialog>
 
+    <!-- 编辑dialog -->
+    <el-dialog v-model="editDialogVisible" title="编辑商品" width="50%" center>
+      <el-form :model="editProductData">
+        <el-form-item label="商品名" :label-width="formLabelWidth">
+          <el-input v-model="editProductData.title" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="商品价格" :label-width="formLabelWidth">
+          <el-input v-model="editProductData.price" autocomplete="off" />
+        </el-form-item>
+
+        <el-form-item label="商品原价" :label-width="formLabelWidth">
+          <el-input v-model="editProductData.old_price" autocomplete="off" />
+        </el-form-item>
+
+        <el-form-item label="商品库存" :label-width="formLabelWidth">
+          <el-input v-model="editProductData.stock" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="商品图片" :label-width="formLabelWidth">
+          <el-upload ref="uploadRef3" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
+            :http-request="handleFileUpload3">
+            <template #trigger>
+              <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
+            </template>
+
+            <el-button type="success" @click="submitEditImg">
+              上传
+            </el-button>
+
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item label="商品详情" :label-width="formLabelWidth">
+          <el-upload ref="uploadRef4" class="upload-demo" action="" :auto-upload="false"
+            :http-request="handleFileUpload4">
+            <template #trigger>
+              <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
+            </template>
+
+            <el-button type="success" @click="submitEditDetail">
+              上传
+            </el-button>
+          </el-upload>
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmEdit">
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup>
-  import { getProductList, delProductById, addProduct, getProductImg } from '@/request/product'
+  import { getProductList, delProductById, addProduct, getProductImg, getProductById, editProduct } from '@/request/product'
   import { onMounted, ref, reactive } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
 
@@ -220,6 +281,7 @@
     cover_img: '',
     detail: '',
     price: '',
+    old_price: '',
     stock: ''
   })
 
@@ -289,6 +351,7 @@
       {
         title: product.title,
         price: product.price,
+        old_price: product.old_price,
         stock: product.stock,
         cover_img: product.cover_img,
         detail: product.detail,
@@ -322,6 +385,150 @@
     console.log("确定新增");
     newProduct()
     dialogFormVisible.value = false
+  }
+
+  //编辑操作
+  const editDialogVisible = ref(false)
+  const editProductData = ref({})
+  // const confirmEditId = ref(0)
+  const handleEdit = (index, row) => {
+    console.log(index, row);
+    getProductInfo(row.id)
+    editDialogVisible.value = true
+  }
+
+  //编辑上传
+  const uploadRef3 = ref()
+  const handleFileUpload3 = (myfile) => {
+    console.log("file333", myfile);
+    getProductImg(
+      {
+        file: myfile.file
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        editProductData.value.cover_img = data.data
+        console.log("editProductData.value.cover_img", editProductData.value.cover_img);
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  const submitEditImg = () => {
+    // console.log("uploadRef1", uploadRef1.value);
+    // console.log("fileData", fileData.value);
+    uploadRef3.value.submit()
+  }
+
+  const uploadRef4 = ref()
+  const handleFileUpload4 = (myfile) => {
+    console.log("file444", myfile);
+    getProductImg(
+      {
+        file: myfile.file
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        editProductData.value.detail = data.data
+        console.log("editProductData.value.detail", editProductData.value.detail);
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  const submitEditDetail = () => {
+    console.log("uploadRef4", uploadRef2.value);
+    uploadRef4.value.submit()
+  }
+
+  const confirmEdit = () => {
+    console.log("确定修改");
+    getEditProduct()
+    console.log("editProductData", editProductData.value);
+    editDialogVisible.value = false
+  }
+
+  const getEditProduct = () => {
+    editProduct(
+      {
+        product_id: editProductData.value.id,
+        title: editProductData.value.title,
+        detail: editProductData.value.detail,
+        price: editProductData.value.price,
+        stock: editProductData.value.stock,
+        cover_img: editProductData.value.cover_img
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          console.log("修改成功");
+          PromptMessage.messageSuccess('修改成功')
+          getTableData()
+
+        } else {
+          console.log("修改失败");
+          PromptMessage.messageWarning('修改失败')
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("修改失败");
+        PromptMessage.messageBoxError('修改失败', msg)
+      }
+    )
+  }
+
+
+  //获取编辑时对应的商品信息
+  const getProductInfo = (pid) => {
+    getProductById(
+      {
+        pid: pid
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          console.log("查找成功");
+          editProductData.value = data.data
+          // PromptMessage.messageSuccess('查找成功')
+
+        } else {
+          console.log("查找失败");
+          PromptMessage.messageWarning('查找失败')
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("查找失败");
+        PromptMessage.messageBoxError('查找失败', msg)
+      }
+    )
   }
   onMounted(() => {
     getTableData()
