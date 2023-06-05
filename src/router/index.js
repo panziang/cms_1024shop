@@ -28,6 +28,10 @@ const indexRoutes = [
         component: () => import("@/views/main/product/product-manage.vue")
       },
       {
+        path: "swipe-manage",
+        component: () => import("@/views/main/product/swipe-manage.vue")
+      },
+      {
         path: "user-manage",
         component: () => import("@/views/main/user/user-manage.vue")
       }

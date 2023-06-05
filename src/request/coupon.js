@@ -24,7 +24,7 @@ export function getCouponList (param, successResponse, errorResponse) {
 
 //下线优惠券
 export function offCoupon (param, successResponse, errorResponse) {
-  requestPost(`/api/coupon/v1/offline/${param.coupon_id}`, param, apiBaseURL, successResponse, errorResponse)
+  requestGet(`/api/coupon/v1/offline/${param.coupon_id}`, param, apiBaseURL, successResponse, errorResponse)
 }
 
 //删除优惠券

@@ -30,7 +30,7 @@
                 <span>商品管理</span>
               </template>
               <el-menu-item index="/main/product-manage" class="nav-menu__menu-item">商品管理</el-menu-item>
-
+              <el-menu-item index="/main/swipe-manage" class="nav-menu__menu-item">轮播图管理</el-menu-item>
 
             </el-sub-menu>
 

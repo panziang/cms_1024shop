@@ -27,6 +27,11 @@ export function delUserById (param, successResponse, errorResponse) {
   requestGet(`/api/user/v1/admin_delete/${param.user_id}`, param, apiBaseURL, successResponse, errorResponse)
 }
 
+//编辑用户信息
+export function editUserInfo (param, successResponse, errorResponse) {
+  requestPost('/api/user/v1/admin_update_user', param, apiBaseURL, successResponse, errorResponse)
+}
+
 
 
 
