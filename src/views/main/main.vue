@@ -19,7 +19,8 @@
                 <span>用户管理</span>
               </template>
               <el-menu-item index="/main/user-manage" class="nav-menu__menu-item">用户管理</el-menu-item>
-
+              <el-menu-item index="/main/admin-manage" class="nav-menu__menu-item"
+                v-if="isAdmin === 1">管理员管理</el-menu-item>
             </el-sub-menu>
 
             <el-sub-menu class="nav-menu__menu-sub">
@@ -64,19 +65,41 @@
       <el-container class="main-page">
         <el-header class="main-page-header">
           <div class="nav-header">
-            <i class="nav-header-fold" @click="handleFoldClick">
-              <el-icon v-show="isFold" size="27">
-                <Fold />
-              </el-icon>
-              <el-icon v-show="!isFold" size="27">
-                <Expand />
-              </el-icon>
-            </i>
+            <div class="icon">
+              <i class="nav-header-fold" @click="handleFoldClick">
+                <el-icon v-show="isFold" size="27">
+                  <Fold />
+                </el-icon>
+                <el-icon v-show="!isFold" size="27">
+                  <Expand />
+                </el-icon>
+              </i>
+            </div>
 
             <div class="nav-header-content">
+              <!-- <img :src=userInfo.head_img alt=""> -->
+              <el-avatar :src=userInfo.head_img fit="fill" />
+
+              <el-dropdown>
+                <span class="el-dropdown-link">
+                  <el-button>
+                    {{ userInfo.name }}
+                    <el-icon class="el-icon--right">
+                      <arrow-down />
+                    </el-icon>
+                  </el-button>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="exitClick()">退出登录</el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+
             </div>
           </div>
         </el-header>
+
         <el-main class="main-page-content">
           <div class="main-page-info">
             <router-view></router-view>
@@ -88,11 +111,77 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
+  import { onMounted, ref } from 'vue'
+  import { getUserInfo, getSignOut } from '@/request/user'
+  import { useRouter } from 'vue-router';
+  import PromptMessage from '@/components/PromptMessage'
+
+  const router = useRouter()
   const isFold = ref(false)
   const handleFoldClick = () => {
     isFold.value = !isFold.value
   }
+  const userInfo = ref({})
+  const getUserDetail = () => {
+    getUserInfo(
+      {},
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          console.log("获取表格数据成功");
+          userInfo.value = data.data
+          if (userInfo.value.mail == '1739864725@qq.com') {
+            isAdmin.value = 1
+          }
+        } else {
+          console.log("获取表格数据失败");
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("获取表格数据失败");
+        // PromptMessage.messageBoxError('登录失败', msg)
+      }
+    )
+  }
+  const exitClick = () => {
+    getSignOut(
+      {},
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          PromptMessage.messageSuccess('登出成功')
+          console.log("成功登出");
+          localStorage.removeItem('1024token')
+          router.push('/log-in')
+
+        } else {
+          // PromptMessage.messageBoxError('登录失败', data.msg)
+          console.log("登出失败");
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("登出失败");
+      }
+    )
+  }
+  const isAdmin = ref(0)
+  onMounted(() => {
+    getUserDetail()
+  })
 </script>
 
 <style lang="less" scoped>
@@ -212,7 +301,9 @@
         .nav-header {
           display: flex;
           align-items: center;
+          // justify-content: space-between;
           width: 100%;
+          // background-color: pink;
 
           &-fold {
             cursor: pointer;
@@ -222,9 +313,24 @@
             display: flex;
             margin-left: 10px;
             align-items: center;
-            justify-content: space-between;
+            justify-content: end;
+            background-color: #fff;
             flex: 1;
+            margin-right: 60px;
+
+            .el-avatar {
+              margin-right: 10px;
+            }
+
           }
+
+          .nav-header-content {
+
+            // border: 1px solid red;
+
+
+          }
+
         }
       }
 

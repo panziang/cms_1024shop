@@ -35,6 +35,11 @@ const indexRoutes = [
         path: "user-manage",
         component: () => import("@/views/main/user/user-manage.vue")
       }
+      ,
+      {
+        path: "admin-manage",
+        component: () => import("@/views/main/user/admin-manage.vue")
+      }
     ]
   },
   {

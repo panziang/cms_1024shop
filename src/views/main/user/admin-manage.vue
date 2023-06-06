@@ -1,23 +1,12 @@
 <template>
-  <div class="user-manage">
+  <div class="admin-manage">
     <div class="title">
-      <h1>用户管理</h1>
-    </div>
-    <div class="search">
-      <el-input v-model="searchVal" placeholder="Please input" class="input-with-select">
-        <template #append>
-          <el-button @click="searchClick()">
-            <el-icon>
-              <Search />
-            </el-icon>
-          </el-button>
-        </template>
-      </el-input>
+      <h1>管理员管理</h1>
     </div>
     <div class="table">
       <div class="table-header">
         <span>
-          用户列表
+          管理员列表
         </span>
       </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
@@ -95,44 +84,9 @@
 </template>
 
 <script setup>
-  import { getUserList, delUserById, editUserInfo, searchUser } from '@/request/user'
+  import { getUserList, delUserById, editUserInfo } from '@/request/user'
   import { onMounted, ref } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
-
-  const searchVal = ref('')
-  const searchClick = () => {
-    getSearch(searchVal.value)
-  }
-  const getSearch = (keyword) => {
-    searchUser(
-      {
-        keyword: keyword
-      },
-      (status, res, data) => {
-        console.log('status: ', status)
-        console.log('res: ', res)
-        console.log('data: ', data)
-
-        if (data.code == '0') {
-          console.log("搜索成功");
-          console.log("data.current_data", data.data.current_data);
-          tableData.value = data.data.current_data
-          listCount.value = data.data.total_record
-
-        } else {
-          console.log("搜索失败");
-        }
-
-      },
-      (status, error, msg) => {
-        console.log('status: ', status)
-        console.log('error: ', error)
-        console.log('msg: ', msg)
-        console.log("搜索失败");
-        PromptMessage.messageBoxError('搜索失败', msg)
-      }
-    )
-  }
 
   //分页数据
   let currentPage = ref(1)
@@ -158,7 +112,7 @@
       {
         page: currentPage.value,
         size: pageSize.value,
-        isAdmin: 0
+        isAdmin: 1
       },
       (status, res, data) => {
         console.log('status: ', status)
@@ -308,34 +262,17 @@
 </script>
 
 <style lang="less" scoped>
-.user-manage {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+.admin-manage {
   // height: 600px;
   // border: 1px solid red;
   padding: 0 20px;
 
   .title {
-    width: 100%;
     text-align: center;
     padding-top: 10px;
   }
 
-  .search {
-    display: flex;
-    justify-content: center;
-    max-width: 1000px;
-    min-width: 500px;
-
-    // background-color: pink;
-    .el-input {
-      height: 40px;
-    }
-  }
-
   .table {
-    width: 100%;
     margin-top: 80px;
 
     .table-header {

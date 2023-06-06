@@ -21,6 +21,15 @@ const apiBaseURL = '/user-server'
 export function getAdminLogin (param, successResponse, errorResponse) {
   requestPost('/api/user/v1/login_by_password_admin', param, apiBaseURL, successResponse, errorResponse)
 }
+//获取图形验证码
+export function sendKaptcha (param, successResponse, errorResponse) {
+  requestGet('/api/notify/v1/get_kaptcha', param, apiBaseURL, successResponse, errorResponse)
+}
+
+// 邮箱、手机号验证码发送
+export function getSignCode (param, successResponse, errorResponse) {
+  requestGet('/api/notify/v1/get_register_code', param, apiBaseURL, successResponse, errorResponse)
+}
 
 
 

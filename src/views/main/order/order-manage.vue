@@ -11,7 +11,10 @@
       </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="70" align="center" />
-        <el-table-column prop="state" label="状态" width="80" align="center" />
+        <el-table-column prop="state" label="状态" width="80" align="center" :filters="[
+          { text: '已支付', value: '已支付' },
+          { text: '已取消', value: '已取消' },
+        ]" :filter-method="filterHandler" />
         <el-table-column prop="nickname" label="昵称" align="center" min-width="70" />
         <el-table-column prop="create_time" label="创建时间" width="180" align="center" />
         <el-table-column prop="total_price" label="总价" align="center" width="70" />
@@ -122,6 +125,12 @@
     )
   }
 
+  const filterHandler = (value, row, column) => {
+    const property = column['property']
+    return row[property] === value
+  }
+
+  //删除操作
   const dialogVisible = ref(false)
   const handleDelete = (index, row) => {
     console.log(index, row);

@@ -32,6 +32,25 @@ export function editUserInfo (param, successResponse, errorResponse) {
   requestPost('/api/user/v1/admin_update_user', param, apiBaseURL, successResponse, errorResponse)
 }
 
+//获取用户详情
+export function getUserInfo (param, successResponse, errorResponse) {
+  requestGet('/api/user/v1/detail', param, apiBaseURL, successResponse, errorResponse)
+}
+
+// 退出登录
+export function getSignOut (param, successResponse, errorResponse) {
+  requestGet('/api/user/v1/log_out', param, apiBaseURL, successResponse, errorResponse)
+}
+
+// 搜索用户
+export function searchUser (param, successResponse, errorResponse) {
+  requestGet('/api/user/v1/search', param, apiBaseURL, successResponse, errorResponse)
+}
+
+
+
+
+
 
 
 

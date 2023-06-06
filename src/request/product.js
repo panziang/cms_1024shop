@@ -48,6 +48,27 @@ export function getProductById (param, successResponse, errorResponse) {
   requestGet(`/api/product/v1/detail/${param.pid}`, param, apiBaseURL, successResponse, errorResponse)
 }
 
+//获取轮播图列表
+export function getSwipeList (param, successResponse, errorResponse) {
+  requestGet('/api/banner/v1/list', param, apiBaseURL, successResponse, errorResponse)
+}
+
+//删除轮播图
+export function delSwipeById (param, successResponse, errorResponse) {
+  requestGet('/api/banner/v1/delete', param, apiBaseURL, successResponse, errorResponse)
+}
+
+//新增轮播图
+export function addSwipe (param, successResponse, errorResponse) {
+  requestPost('/api/banner/v1/add', param, apiBaseURL, successResponse, errorResponse)
+}
+
+//修改轮播图信息
+export function editSwipe (param, successResponse, errorResponse) {
+  requestPost('/api/banner/v1/update', param, apiBaseURL, successResponse, errorResponse)
+}
+
+
 
 
 

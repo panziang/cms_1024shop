@@ -13,8 +13,13 @@
                 <el-form ref="loginCodeFormRef" label-position="top" label-width="100px" :model="loginForm"
                   style="max-width: 460px" :rules="rules" @keydown.enter="submitFormByCode(loginCodeFormRef)">
 
-                  <el-form-item label="手机号" prop="phone">
-                    <el-input v-model="loginForm.phone" placeholder="请输入手机号" />
+                  <el-form-item label="邮箱号" prop="email">
+                    <el-input v-model="loginForm.email" placeholder="请输入邮箱号" />
+                  </el-form-item>
+
+                  <el-form-item label="图形验证码">
+                    <el-input v-model="loginForm.kaptcha" placeholder="请输入图形验证码" />
+                    <img :src=kaptcha alt="" style="margin-top: 5px;">
                   </el-form-item>
 
                   <el-form-item label="验证码" class="code" prop="code">
@@ -23,7 +28,6 @@
                       <el-button class="code-btn" @click="getCode" :disabled="codeDisabled">{{ codeText }}</el-button>
                     </div>
                   </el-form-item>
-
                   <div class="login-btn">
                     <el-button @click="submitFormByCode(loginCodeFormRef)">登录/注册</el-button>
                   </div>
@@ -61,7 +65,7 @@
 <script setup>
   import { onMounted, reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getAdminLogin } from '../../request/login'
+  import { getAdminLogin, sendKaptcha, getSignCode } from '../../request/login'
   import PromptMessage from '../../components//PromptMessage'
 
   const myTabs = ref('1')
@@ -69,11 +73,11 @@
   const loginPwdFormRef = ref()
   const loginCodeFormRef = ref()
   const loginForm = reactive({
-    phone: '',
+    email: '',
     account: '',
     password: '',
     code: '',
-    privacy: null
+    kaptcha: ''
   })
   const router = useRouter()
 
@@ -92,14 +96,14 @@
       }
     }
   }
-  const checkPhone = (rule, value, callback) => {
+  const checkEmail = (rule, value, callback) => {
     if (!value) {
-      return callback(new Error('手机号不能为空！'))
+      return callback(new Error('邮箱号不能为空！'))
     } else {
-      let finalCheckPhone = /^1[3456789]\d{9}$/
-      let checkVal = finalCheckPhone.test(value)
+      let finalCheckEmail = /^([\w.-]+@[\w.-]+\.[a-zA-Z]{2,6})$/
+      let checkVal = finalCheckEmail.test(value)
       if (!checkVal) {
-        return callback(new Error('手机号格式错误！'))
+        return callback(new Error('邮箱号格式错误！'))
       }
       else {
         callback()
@@ -137,7 +141,7 @@
     // }
   }
   const rules = reactive({
-    phone: [{ validator: checkPhone, trigger: 'blur' }],
+    email: [{ validator: checkEmail, trigger: 'blur' }],
     account: [{ validator: checkAccount, trigger: 'blur' }],
     password: [{ validator: validatePass, trigger: 'blur' }],
     code: [{ validator: checkCode, trigger: 'blur' }],
@@ -192,35 +196,38 @@
   const codeText = ref('发送验证码')
   const codeDisabled = ref(false)
   const getCode = () => {
-    loginCodeFormRef.value.validateField('phone', (res) => {
+    loginCodeFormRef.value.validateField('email', (res) => {
       if (res) {
-        sendCode(
+        getSignCode(
           {
-            content: loginForm.phone,
+            kaptcha: loginForm.kaptcha,
+            to: loginForm.email
           },
           (status, res, data) => {
             console.log('status: ', status)
             console.log('res: ', res)
             console.log('data: ', data)
-
-            if (data.status == '200') {
-              PromptMessage.messageSuccess('发送成功')
-              tackBtn();
+            if (data.code == '0') {
+              PromptMessage.messageSuccess("发送成功")
+              tackBtn()
             } else {
-              PromptMessage.messageError('发送失败')
+              console.log("发送失败");
+              PromptMessage.messageError('发送失败' + data.msg)
             }
+
           },
           (status, error, msg) => {
             console.log('status: ', status)
             console.log('error: ', error)
             console.log('msg: ', msg)
-            PromptMessage.messageBoxError('发送失败', msg)
+            console.log("发送失败");
+            PromptMessage.messageError('发送失败' + msg)
           }
         )
 
       }
       else {
-        PromptMessage.messageError('请输入正确手机号')
+        PromptMessage.messageError('请输入正确邮箱号')
         return
       }
     })
@@ -241,8 +248,30 @@
       }
     }, 1000);
   }
-  onMounted(() => {
 
+  //获取图形验证码
+  const kaptcha = ref({})
+  const getKaptcha = () => {
+    sendKaptcha(
+      {},
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        // const imgurl = URL.createObjectURL(data)
+        kaptcha.value = URL.createObjectURL(data)
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  onMounted(() => {
+    getKaptcha()
   })
 
 </script>
@@ -320,7 +349,7 @@
             .el-form {
               .el-form-item {
                 .el-input {
-                  height: 50px;
+                  height: 40px;
                 }
 
               }
@@ -336,7 +365,7 @@
 
                 .code-btn {
                   // width: 80px;
-                  height: 50px;
+                  height: 40px;
                   margin-left: 5px;
                 }
               }

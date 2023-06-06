@@ -17,10 +17,22 @@
       </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="60" align="center" />
-        <el-table-column label="状态" width="70" align="center">
+        <!-- <el-table-column label="状态" width="70" align="center" :filters="[
+          { text: '上线', value: '上线' },
+          { text: '下线', value: '下线' },
+          { text: '草稿', value: '草稿' }
+        ]" :filter-method="filterHandler">
           <template #default="scope">
             {{ scope.row.publish }}
           </template>
+        </el-table-column> -->
+
+        <el-table-column label="状态" prop="publish" width="70" align="center" :filters="[
+          { text: '上线', value: '上线' },
+          { text: '下线', value: '下线' },
+          { text: '草稿', value: '草稿' }
+        ]" :filter-method="filterHandler">
+
         </el-table-column>
         <el-table-column prop="category" label="分类" width="120" align="center" />
         <el-table-column prop="price" label="价格" align="center" width="70" />
@@ -228,6 +240,14 @@
             } else if (item.publish == 'OFFLINE') {
               item.publish = '下线'
             }
+
+            if (item.category == 'NEW_USER') {
+              item.category = '新人券'
+            } else if (item.category == 'PROMOTION') {
+              item.category = '促销券'
+            }
+
+
           })
           listCount.value = data.data.total_record
         } else {
@@ -243,6 +263,11 @@
         // PromptMessage.messageBoxError('登录失败', msg)
       }
     )
+  }
+
+  const filterHandler = (value, row, column) => {
+    const property = column['property']
+    return row[property] === value
   }
 
   //下线操作
