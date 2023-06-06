@@ -68,7 +68,7 @@
   import { getAdminLogin, sendKaptcha, getSignCode } from '../../request/login'
   import PromptMessage from '../../components//PromptMessage'
 
-  const myTabs = ref('1')
+  const myTabs = ref('2')
 
   const loginPwdFormRef = ref()
   const loginCodeFormRef = ref()

@@ -19,7 +19,9 @@
         <el-table-column prop="id" label="id" max-width="70" align="center" />
         <el-table-column label="图片" align="center" min-width="160">
           <template #default="scope">
-            <img :src=scope.row.img alt="" height="70">
+            <!-- <img :src=scope.row.img alt="" height="70"> -->
+            <el-image style=" height: 70px" :src=scope.row.img :zoom-rate="1.2" :preview-src-list=[scope.row.img]
+              :initial-index="0" fit="cover" preview-teleported />
           </template>
         </el-table-column>
         <el-table-column prop="product_id" label="商品id" max-width="70" align="center" />
@@ -63,7 +65,7 @@
         </el-form-item>
         <el-form-item label="商品图片" :label-width="formLabelWidth">
           <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
-            :http-request="handleFileUpload1">
+            :http-request="handleFileUpload1" list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
@@ -103,7 +105,7 @@
 
         <el-form-item label="商品图片" :label-width="formLabelWidth">
           <el-upload ref="uploadRef3" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
-            :http-request="handleFileUpload3">
+            :http-request="handleFileUpload3" list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>

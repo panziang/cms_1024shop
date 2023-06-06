@@ -14,7 +14,9 @@
         <el-table-column prop="name" label="姓名" width="140" align="center" />
         <el-table-column label="头像" width="200" align="center">
           <template #default="scope">
-            <img :src=scope.row.head_img alt="" height="70" fit="cover">
+            <!-- <img :src=scope.row.head_img alt="" height="70" fit="cover"> -->
+            <el-image style=" height: 70px" :src=scope.row.head_img :zoom-rate="1.2"
+              :preview-src-list=[scope.row.head_img] :initial-index="0" fit="cover" preview-teleported />
           </template>
         </el-table-column>
         <el-table-column prop="sex" label="性别" align="center" max-width="50" />

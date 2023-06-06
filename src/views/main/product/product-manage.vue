@@ -20,12 +20,16 @@
         <el-table-column prop="title" label="商品名" width="200" align="center" />
         <el-table-column label="商品图" align="center" min-width="160">
           <template #default="scope">
-            <img :src=scope.row.cover_img alt="" height="70">
+            <!-- <img :src=scope.row.cover_img alt="" height="70"> -->
+            <el-image style=" height: 100px" :src=scope.row.cover_img :zoom-rate="1.2"
+              :preview-src-list=[scope.row.cover_img] :initial-index="0" fit="cover" preview-teleported />
           </template>
         </el-table-column>
         <el-table-column label="详情" align="center" min-width="160">
           <template #default="scope">
-            <img :src=scope.row.detail alt="" height="70">
+            <!-- <img :src=scope.row.detail alt="" height="70"> -->
+            <el-image style=" height: 100px" :src=scope.row.detail :zoom-rate="1.2" :preview-src-list=[scope.row.detail]
+              :initial-index="0" fit="cover" preview-teleported />
           </template>
         </el-table-column>
         <el-table-column prop="price" label="价格" max-width="100" align="center" />
@@ -78,7 +82,7 @@
         </el-form-item>
         <el-form-item label="商品图片" :label-width="formLabelWidth">
           <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
-            :http-request="handleFileUpload1">
+            :http-request="handleFileUpload1" list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
@@ -91,8 +95,8 @@
         </el-form-item>
 
         <el-form-item label="商品详情" :label-width="formLabelWidth">
-          <el-upload ref="uploadRef2" class="upload-demo" action="" :auto-upload="false"
-            :http-request="handleFileUpload2">
+          <el-upload ref="uploadRef2" class="upload-demo" action="" :auto-upload="false" :http-request="handleFileUpload2"
+            list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
@@ -133,7 +137,7 @@
         </el-form-item>
         <el-form-item label="商品图片" :label-width="formLabelWidth">
           <el-upload ref="uploadRef3" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
-            :http-request="handleFileUpload3">
+            :http-request="handleFileUpload3" list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
@@ -146,8 +150,8 @@
         </el-form-item>
 
         <el-form-item label="商品详情" :label-width="formLabelWidth">
-          <el-upload ref="uploadRef4" class="upload-demo" action="" :auto-upload="false"
-            :http-request="handleFileUpload4">
+          <el-upload ref="uploadRef4" class="upload-demo" action="" :auto-upload="false" :http-request="handleFileUpload4"
+            list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
