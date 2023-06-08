@@ -302,6 +302,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         product.cover_img = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("product.cover_img", product.cover_img);
 
       },
@@ -331,6 +332,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         product.detail = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("product.detail", product.detail);
 
       },
@@ -414,6 +416,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         editProductData.value.cover_img = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("editProductData.value.cover_img", editProductData.value.cover_img);
 
       },
@@ -443,6 +446,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         editProductData.value.detail = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("editProductData.value.detail", editProductData.value.detail);
 
       },

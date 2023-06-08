@@ -8,6 +8,12 @@
         <span>
           管理员列表
         </span>
+        <el-button type="primary" @click="addClick">
+          <el-icon>
+            <Plus />
+          </el-icon>
+          新建
+        </el-button>
       </div>
       <el-table :data="tableData" stripe style="width: 100%" border>
         <el-table-column prop="id" label="id" width="100" align="center" />
@@ -65,10 +71,8 @@
           <el-select v-model="editUserData.sex" class="m-2" placeholder="选择性别">
             <el-option label="男" value="1" />
             <el-option label="女" value="0" />
-
           </el-select>
         </el-form-item>
-
 
 
       </el-form>
@@ -82,12 +86,73 @@
       </template>
     </el-dialog>
 
+    <!-- 新增dialog -->
+    <el-dialog v-model="newDialogVisible" title="新增管理员" width="50%" center>
+      <el-form :model="admin" ref="newAdminRef">
+        <el-form-item label="姓名" :label-width="formLabelWidth">
+          <el-input v-model="admin.name" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="密码" :label-width="formLabelWidth">
+          <el-input v-model="admin.pwd" autocomplete="off" type="password" />
+        </el-form-item>
+
+        <el-form-item label="用户性别" :label-width="formLabelWidth">
+          <el-select v-model="admin.sex" class="m-2" placeholder="选择性别">
+            <el-option label="男" value="1" />
+            <el-option label="女" value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="个性签名" :label-width="formLabelWidth">
+          <el-input v-model="admin.slogan" autocomplete="off" />
+        </el-form-item>
+
+        <el-form-item label="邮箱号" :label-width="formLabelWidth">
+          <el-input v-model="admin.mail" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="图像验证码" :label-width="formLabelWidth">
+          <el-input v-model="kaptchaCode" autocomplete="off" />
+          <img :src=kaptcha alt="">
+        </el-form-item>
+
+        <el-form-item label="用户头像" :label-width="formLabelWidth">
+          <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
+            :http-request="handleFileUpload1" list-type="picture">
+            <template #trigger>
+              <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
+            </template>
+
+            <el-button type="success" @click="submitUploadImg">
+              上传
+            </el-button>
+
+          </el-upload>
+        </el-form-item>
+
+        <el-form-item label="验证码" class="code" :label-width="formLabelWidth">
+          <div class="code-item">
+            <el-input v-model="admin.codecode" placeholder="请输入验证码" class="code-input" />
+            <el-button class="code-btn" @click="getCode" :disabled="codeDisabled">{{ codeText
+            }}</el-button>
+          </div>
+        </el-form-item>
+
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="newDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="confirmAdd()">
+            确定
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
+
   </div>
 </template>
 
 <script setup>
-  import { getUserList, delUserById, editUserInfo } from '@/request/user'
-  import { onMounted, ref } from 'vue';
+  import { getUserList, delUserById, editUserInfo, getSignCode, sendKaptcha, signUpAdmin, getAvatar } from '@/request/user'
+  import { onMounted, reactive, ref } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
 
   //分页数据
@@ -125,6 +190,7 @@
           console.log("获取表格数据成功");
           tableData.value = data.data.current_data
           currentUserData.value = data.data.current_data
+          console.log("currentUserData.value", currentUserData.value);
           tableData.value.forEach(item => {
             item.sex = item.sex == 1 ? '男' : '女'
           })
@@ -142,6 +208,178 @@
         // PromptMessage.messageBoxError('登录失败', msg)
       }
     )
+  }
+
+  //新增操作
+  const newDialogVisible = ref(false)
+  const newAdminRef = ref()
+  const formLabelWidth = '140px'
+  const admin = reactive({
+    user_id: '',
+    name: '',
+    pwd: '',
+    slogan: '',
+    sex: '',
+    mail: '',
+    head_img: '',
+    code: ''
+  })
+  const addClick = () => {
+    newDialogVisible.value = true
+    console.log("123");
+    getKaptcha()
+  }
+
+  const uploadRef1 = ref()
+  const handleFileUpload1 = (myfile) => {
+    console.log("file111", myfile);
+    getAvatar(
+      {
+        file: myfile.file
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        admin.head_img = data.data
+        PromptMessage.messageSuccess('上传成功')
+        console.log("admin.head_img", admin.head_img);
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+  const submitUploadImg = () => {
+    // console.log("uploadRef1", uploadRef1.value);
+    // console.log("fileData", fileData.value);
+    uploadRef1.value.submit()
+  }
+
+  //验证码
+  const codeText = ref('发送验证码')
+  const codeDisabled = ref(false)
+  const getCode = () => {
+    newAdminRef.value.validateField('mail', (res) => {
+      if (res) {
+        getSignCode(
+          {
+            kaptcha: kaptchaCode.value,
+            to: admin.mail
+          },
+          (status, res, data) => {
+            console.log('status: ', status)
+            console.log('res: ', res)
+            console.log('data: ', data)
+            if (data.code == '0') {
+              PromptMessage.messageSuccess("发送成功")
+              tackBtn()
+            } else {
+              console.log("发送失败");
+              PromptMessage.messageError('发送失败' + data.msg)
+            }
+
+          },
+          (status, error, msg) => {
+            console.log('status: ', status)
+            console.log('error: ', error)
+            console.log('msg: ', msg)
+            console.log("发送失败");
+            PromptMessage.messageError('发送失败' + msg)
+          }
+        )
+
+      }
+      else {
+        PromptMessage.messageError('请输入正确邮箱号')
+        return
+      }
+    })
+    console.log("getCode");
+
+  }
+  const tackBtn = () => {
+    let time = 60;
+    let timer = setInterval(() => {
+      if (time == 0) {
+        clearInterval(timer);
+        codeText.value = '获取验证码';
+        codeDisabled.value = false;
+      } else {
+        codeDisabled.value = true;
+        codeText.value = time + '秒后重试';
+        time--;
+      }
+    }, 1000);
+  }
+
+  //获取图形验证码
+  const kaptchaCode = ref('')
+  const kaptcha = ref({})
+  const getKaptcha = () => {
+    sendKaptcha(
+      {},
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+        // const imgurl = URL.createObjectURL(data)
+        kaptcha.value = URL.createObjectURL(data)
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("发送失败");
+      }
+    )
+  }
+
+  const newAdmin = () => {
+    signUpAdmin(
+      {
+        code: admin.code,
+        head_img: admin.head_img,
+        mail: admin.mail,
+        name: admin.name,
+        pwd: admin.pwd,
+        sex: admin.sex,
+        slogan: admin.slogan
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          console.log("新增成功");
+          PromptMessage.messageSuccess('新增成功')
+          getTableData()
+
+        } else {
+          console.log("新增失败");
+          PromptMessage.messageWarning('新增失败')
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        console.log("新增失败");
+        PromptMessage.messageBoxError('新增失败', msg)
+      }
+    )
+  }
+  //确认新增
+  const confirmAdd = () => {
+    newAdmin()
+    newDialogVisible.value = false
   }
 
   //删除操作
@@ -201,13 +439,6 @@
   const handleEdit = (index, row) => {
     console.log(index, row);
     editDialogVisible.value = true
-    // couponList.value.forEach(item => {
-    //   if (item.id == row.id) {
-    //     editCouponData.value = item
-    //     editCouponData.value.start_time = item.start_time.replace(/[年月]/g, "-").replace(/日/g, "");
-    //     editCouponData.value.end_time = item.end_time.replace(/[年月]/g, "-").replace(/日/g, "");
-    //   }
-    // })
     currentUserData.value.forEach(item => {
       if (item.id == row.id) {
         editUserData.value = item
@@ -230,7 +461,8 @@
         name: editUserData.value.name,
         new_pwd: editUserData.value.new_pwd,
         slogan: editUserData.value.slogan,
-        sex: editUserData.value.sex
+        sex: editUserData.value.sex,
+        is_admins: 1
       },
       (status, res, data) => {
         console.log('status: ', status)
@@ -297,6 +529,31 @@
     display: flex;
     justify-content: center;
     padding-bottom: 50px;
+  }
+
+  .el-form {
+
+    .el-form-item {
+      // border: 1px solid red;
+      max-width: 500px;
+    }
+
+    .code {
+
+      .code-item {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        // height: 40px;
+
+      }
+
+      .code-btn {
+        // width: 80px;
+        // height: 30px;
+        margin-left: 5px;
+      }
+    }
   }
 }
 </style>

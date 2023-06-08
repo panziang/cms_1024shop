@@ -167,6 +167,8 @@
         } else {
           // PromptMessage.messageBoxError('登录失败', data.msg)
           console.log("登出失败");
+          localStorage.removeItem('1024token')
+          router.push('/log-in')
         }
 
       },
@@ -175,6 +177,8 @@
         console.log('error: ', error)
         console.log('msg: ', msg)
         console.log("登出失败");
+        localStorage.removeItem('1024token')
+        router.push('/log-in')
       }
     )
   }
