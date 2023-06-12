@@ -56,7 +56,7 @@
     </el-dialog>
 
     <!-- 编辑dialog -->
-    <el-dialog v-model="editDialogVisible" title="编辑用户信息" width="50%" center>
+    <el-dialog v-model="editDialogVisible" title="编辑管理员信息" width="50%" center>
       <el-form :model="editUserData" label-position="right" label-width="90">
         <el-form-item label="用户名" :label-width="formLabelWidth">
           <el-input v-model="editUserData.name" autocomplete="off" />

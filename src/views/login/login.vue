@@ -349,6 +349,7 @@
           width: 520px;
           padding: 20px 50px;
           padding-bottom: 30px;
+          // height: 600px;
 
           .login-signup-header {
 
@@ -365,6 +366,8 @@
           }
 
           .el-tabs {
+            min-width: 400px;
+
             :deep(.el-tabs__header) {
               background-color: rgb(245, 245, 245);
               // border: 1px solid red;
