@@ -21,6 +21,7 @@
               <el-menu-item index="/main/user-manage" class="nav-menu__menu-item">用户管理</el-menu-item>
               <el-menu-item index="/main/admin-manage" class="nav-menu__menu-item"
                 v-if="isAdmin === 1">管理员管理</el-menu-item>
+              <el-menu-item index="/main/admin-info" class="nav-menu__menu-item" v-if="isAdmin !== 1">个人中心</el-menu-item>
             </el-sub-menu>
 
             <el-sub-menu class="nav-menu__menu-sub">
@@ -55,7 +56,7 @@
                 <span>优惠券管理</span>
               </template>
               <el-menu-item index="/main/coupon-manage" class="nav-menu__menu-item">优惠券管理</el-menu-item>
-
+              <el-menu-item index="/main/coupon-record-manage" class="nav-menu__menu-item">优惠券领取记录</el-menu-item>
 
             </el-sub-menu>
           </el-menu>
@@ -91,6 +92,7 @@
                 </span>
                 <template #dropdown>
                   <el-dropdown-menu>
+                    <el-dropdown-item @click="infoClick()">个人信息</el-dropdown-item>
                     <el-dropdown-item @click="exitClick()">退出登录</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -149,6 +151,9 @@
         // PromptMessage.messageBoxError('登录失败', msg)
       }
     )
+  }
+  const infoClick = () => {
+    router.push('/main/admin-info')
   }
   const exitClick = () => {
     getSignOut(
@@ -328,12 +333,6 @@
 
           }
 
-          .nav-header-content {
-
-            // border: 1px solid red;
-
-
-          }
 
         }
       }

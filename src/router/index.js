@@ -20,6 +20,10 @@ const indexRoutes = [
         component: () => import("@/views/main/coupon/coupon-manage.vue")
       },
       {
+        path: "coupon-record-manage",
+        component: () => import("@/views/main/coupon/coupon-record-manage.vue")
+      },
+      {
         path: "order-manage",
         component: () => import("@/views/main/order/order-manage.vue")
       },
@@ -36,6 +40,10 @@ const indexRoutes = [
         component: () => import("@/views/main/user/user-manage.vue")
       }
       ,
+      {
+        path: "admin-info",
+        component: () => import("@/views/main/user/admin-info.vue")
+      },
       {
         path: "admin-manage",
         component: () => import("@/views/main/user/admin-manage.vue")

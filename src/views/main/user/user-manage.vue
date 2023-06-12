@@ -260,6 +260,7 @@
       }
     })
     console.log("editUserData", editUserData.value);
+    editUserData.value.sex = editUserData.value.sex == '男' ? '1' : '0'
   }
 
   const confirmEdit = () => {

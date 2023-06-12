@@ -43,6 +43,20 @@ export function changeCoupon (param, successResponse, errorResponse) {
 }
 
 
+//优惠券领取记录列表
+export function getCouponRecord (param, successResponse, errorResponse) {
+  requestGet('/api/coupon_record/v1/page_coupon_list', param, apiBaseURL, successResponse, errorResponse)
+}
+
+//删除优惠券领取记录
+export function delCouponRecordById (param, successResponse, errorResponse) {
+  requestGet('/api/coupon_record/v1/delete', param, apiBaseURL, successResponse, errorResponse)
+}
+
+
+
+
+
 
 
 

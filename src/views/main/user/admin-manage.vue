@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-  import { getUserList, delUserById, editUserInfo, getSignCode, sendKaptcha, signUpAdmin, getAvatar } from '@/request/user'
+  import { getUserList, delUserById, editUserInfo, getSignCode, sendKaptcha, signUpAdmin, getAvatar, editAdminInfo } from '@/request/user'
   import { onMounted, reactive, ref } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
 
@@ -444,6 +444,7 @@
         editUserData.value = item
       }
     })
+    editUserData.value.sex = editUserData.value.sex == '男' ? '1' : '0'
     console.log("editUserData", editUserData.value);
   }
 
@@ -462,7 +463,7 @@
         new_pwd: editUserData.value.new_pwd,
         slogan: editUserData.value.slogan,
         sex: editUserData.value.sex,
-        is_admins: 1
+        is_admin: 1
       },
       (status, res, data) => {
         console.log('status: ', status)
@@ -470,13 +471,13 @@
         console.log('data: ', data)
 
         if (data.code == '0') {
-          console.log("更改用户信息成功");
-          PromptMessage.messageSuccess("更改用户信息成功")
+          console.log("更改管理员信息成功");
+          PromptMessage.messageSuccess("更改管理员信息成功")
           getTableData()
 
         } else {
-          console.log("更改用户信息失败");
-          PromptMessage.messageBoxError('更改用户信息失败', data.msg)
+          console.log("更改管理员信息失败");
+          PromptMessage.messageBoxError('更改管理员信息失败', data.msg)
         }
 
       },
@@ -484,8 +485,8 @@
         console.log('status: ', status)
         console.log('error: ', error)
         console.log('msg: ', msg)
-        console.log("更改用户信息失败");
-        PromptMessage.messageBoxError('更改用户信息失败', msg)
+        console.log("更改管理员信息失败");
+        PromptMessage.messageBoxError('更改管理员信息失败', msg)
       }
     )
   }

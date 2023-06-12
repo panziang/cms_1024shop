@@ -477,6 +477,7 @@
         title: editProductData.value.title,
         detail: editProductData.value.detail,
         price: editProductData.value.price,
+        old_price: editProductData.value.old_price,
         stock: editProductData.value.stock,
         cover_img: editProductData.value.cover_img
       },

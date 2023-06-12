@@ -192,7 +192,6 @@
 <script setup>
   import { getCouponList, delCouponById, addCoupon, offCoupon, changeCoupon } from '@/request/coupon'
   import { onMounted, ref, reactive } from 'vue';
-  import { getResTime } from '@/utils/format_date'
   import PromptMessage from '@/components/PromptMessage'
   import { getCouponDate, getCouponCnDate } from '@/utils/format_date'
 

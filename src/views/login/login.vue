@@ -20,6 +20,7 @@
                   <el-form-item label="图形验证码">
                     <el-input v-model="loginForm.kaptcha" placeholder="请输入图形验证码" />
                     <img :src=kaptcha alt="" style="margin-top: 5px;">
+                    <el-button style="height: 40px;width: 100px; margin-left: 88px;" @click="newKaptcha()">刷新</el-button>
                   </el-form-item>
 
                   <el-form-item label="验证码" class="code" prop="code">
@@ -65,7 +66,7 @@
 <script setup>
   import { onMounted, reactive, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getAdminLogin, sendKaptcha, getSignCode } from '../../request/login'
+  import { getAdminLogin, sendKaptcha, getSignCode, getAdminLoginByCode } from '../../request/login'
   import PromptMessage from '../../components//PromptMessage'
 
   const myTabs = ref('2')
@@ -192,6 +193,51 @@
     })
   }
 
+  //发送验证码登录请求
+  const signInByCode = () => {
+    console.log("signIn~");
+    getAdminLoginByCode(
+      {
+        mail: loginForm.email,
+        code: loginForm.code,
+      },
+      (status, res, data) => {
+        console.log('status: ', status)
+        console.log('res: ', res)
+        console.log('data: ', data)
+
+        if (data.code == '0') {
+          PromptMessage.messageSuccess('登录成功')
+          let token = data.data
+          localStorage.setItem('1024token', token);
+          router.push('/main')
+        } else {
+          PromptMessage.messageBoxError('登录失败', data.msg)
+        }
+
+      },
+      (status, error, msg) => {
+        console.log('status: ', status)
+        console.log('error: ', error)
+        console.log('msg: ', msg)
+        PromptMessage.messageBoxError('登录失败', msg)
+      }
+    )
+  }
+  const submitFormByCode = (formEl) => {
+    if (!formEl) return
+    formEl.validate((valid) => {
+      if (valid) {
+        signInByCode()
+        console.log('123')
+      } else {
+        console.log('error submit!')
+        PromptMessage.messageError('登录失败')
+        return false
+      }
+    })
+  }
+
   //验证码
   const codeText = ref('发送验证码')
   const codeDisabled = ref(false)
@@ -212,7 +258,7 @@
               tackBtn()
             } else {
               console.log("发送失败");
-              PromptMessage.messageError('发送失败' + data.msg)
+              PromptMessage.messageError('发送失败 ' + data.msg)
             }
 
           },
@@ -221,7 +267,7 @@
             console.log('error: ', error)
             console.log('msg: ', msg)
             console.log("发送失败");
-            PromptMessage.messageError('发送失败' + msg)
+            PromptMessage.messageError('发送失败 ' + msg)
           }
         )
 
@@ -269,6 +315,9 @@
         console.log("发送失败");
       }
     )
+  }
+  const newKaptcha = () => {
+    getKaptcha()
   }
   onMounted(() => {
     getKaptcha()

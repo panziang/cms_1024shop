@@ -17,10 +17,16 @@ const apiBaseURL = '/user-server'
 //   requestGet('/home/info_list/xxxxxx', param, apiBaseURL, successResponse, errorResponse)
 // }
 
-//管理员登录
+//管理员密码登录
 export function getAdminLogin (param, successResponse, errorResponse) {
   requestPost('/api/user/v1/login_by_password_admin', param, apiBaseURL, successResponse, errorResponse)
 }
+
+//管理员验证码登录
+export function getAdminLoginByCode (param, successResponse, errorResponse) {
+  requestPost('/api/user/v1/login_by_code_admin', param, apiBaseURL, successResponse, errorResponse)
+}
+
 //获取图形验证码
 export function sendKaptcha (param, successResponse, errorResponse) {
   requestGet('/api/notify/v1/get_kaptcha', param, apiBaseURL, successResponse, errorResponse)
@@ -28,7 +34,7 @@ export function sendKaptcha (param, successResponse, errorResponse) {
 
 // 邮箱、手机号验证码发送
 export function getSignCode (param, successResponse, errorResponse) {
-  requestGet('/api/notify/v1/get_register_code', param, apiBaseURL, successResponse, errorResponse)
+  requestGet('/api/notify/v1/get_login_code', param, apiBaseURL, successResponse, errorResponse)
 }
 
 
