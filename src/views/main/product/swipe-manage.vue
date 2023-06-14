@@ -64,8 +64,8 @@
           <el-input v-model="swipe.weight" autocomplete="off" />
         </el-form-item>
         <el-form-item label="商品图片" :label-width="formLabelWidth">
-          <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :file-list="fileList"
-            :http-request="handleFileUpload1" list-type="picture">
+          <el-upload ref="uploadRef1" class="upload-demo" action="" :auto-upload="false" :http-request="handleFileUpload1"
+            list-type="picture">
             <template #trigger>
               <el-button type="primary" style="margin-right: 30px;">选择文件</el-button>
             </template>
@@ -256,6 +256,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         swipe.img = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("swipe.img", swipe.img);
 
       },
@@ -343,6 +344,7 @@
         console.log('res: ', res)
         console.log('data: ', data)
         editSwipeData.value.img = data.data
+        PromptMessage.messageSuccess('上传成功')
         console.log("editSwipeData.value.img", editSwipeData.value.img);
 
       },

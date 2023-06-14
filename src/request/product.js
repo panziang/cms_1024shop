@@ -19,7 +19,7 @@ const apiBaseURL = '/product-server'
 
 //获取商品列表
 export function getProductList (param, successResponse, errorResponse) {
-  requestGet('/api/product/v1/page_product_list', param, apiBaseURL, successResponse, errorResponse)
+  requestGet('/api/product/v1/page_product_list_admin', param, apiBaseURL, successResponse, errorResponse)
 }
 
 //上传商品图片
@@ -50,7 +50,7 @@ export function getProductById (param, successResponse, errorResponse) {
 
 //获取轮播图列表
 export function getSwipeList (param, successResponse, errorResponse) {
-  requestGet('/api/banner/v1/list', param, apiBaseURL, successResponse, errorResponse)
+  requestGet('/api/banner/v1/list_admin', param, apiBaseURL, successResponse, errorResponse)
 }
 
 //删除轮播图
