@@ -120,9 +120,11 @@
           console.log("data.current_data", data.data.current_data);
           tableData.value = data.data.current_data
           listCount.value = data.data.total_record
+          PromptMessage.messageSuccess('搜索成功')
 
         } else {
           console.log("搜索失败");
+          PromptMessage.messageBoxError('搜索失败', data.msg)
         }
 
       },
