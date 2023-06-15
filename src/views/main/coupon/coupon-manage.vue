@@ -107,6 +107,7 @@
           <el-select v-model="coupon.category" class="m-2" placeholder="选择分类">
             <el-option label="促销劵" value="PROMOTION" />
             <el-option label="注册赠券" value="NEW_USER" />
+            <el-option label="任务券" value="TASK" />
           </el-select>
         </el-form-item>
         <el-form-item label="发布状态" :label-width="formLabelWidth">
@@ -158,6 +159,8 @@
           <el-select v-model="editCouponData.category" class="m-2" placeholder="选择分类">
             <el-option label="促销劵" value="PROMOTION" />
             <el-option label="注册赠券" value="NEW_USER" />
+            <el-option label="任务券" value="TASK" />
+
           </el-select>
         </el-form-item>
         <el-form-item label="发布状态" :label-width="formLabelWidth">
@@ -244,6 +247,8 @@
               item.category = '新人券'
             } else if (item.category == 'PROMOTION') {
               item.category = '促销券'
+            } else if (item.category == 'TASK') {
+              item.category = '任务券'
             }
 
 
@@ -431,18 +436,6 @@
 
   //编辑操作
   const editDialogVisible = ref(false)
-  // const editCoupon = reactive({
-  //   id: '',
-  //   coupon_title: '',
-  //   category: '', //选择
-  //   publish: '', //选择
-  //   publish_count: '',
-  //   price: '',
-  //   condition_price: '',
-  //   start_time: '', //时间选择
-  //   end_time: '',   //时间选择
-  //   user_limit: ''
-  // })
   const editCouponData = ref({})
   const confirmEditId = ref(0)
   const handleEdit = (index, row) => {
