@@ -130,7 +130,7 @@
 
         <el-form-item label="验证码" class="code" :label-width="formLabelWidth">
           <div class="code-item">
-            <el-input v-model="admin.codecode" placeholder="请输入验证码" class="code-input" />
+            <el-input v-model="admin.code" placeholder="请输入验证码" class="code-input" />
             <el-button class="code-btn" @click="getCode" :disabled="codeDisabled">{{ codeText
             }}</el-button>
           </div>
@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-  import { getUserList, delUserById, editUserInfo, getSignCode, sendKaptcha, signUpAdmin, getAvatar, editAdminInfo } from '@/request/user'
+  import { getUserList, editUserInfo, getSignCode, sendKaptcha, signUpAdmin, getAvatar, delAdminById } from '@/request/user'
   import { onMounted, reactive, ref } from 'vue';
   import PromptMessage from '@/components/PromptMessage'
 
@@ -403,7 +403,7 @@
   }
 
   const delUser = (uid) => {
-    delUserById(
+    delAdminById(
       {
         user_id: uid
       },

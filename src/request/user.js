@@ -24,6 +24,11 @@ export function getUserList (param, successResponse, errorResponse) {
 
 //删除用户
 export function delUserById (param, successResponse, errorResponse) {
+  requestGet(`/api/user/v1/user_delete/${param.user_id}`, param, apiBaseURL, successResponse, errorResponse)
+}
+
+//删除管理员
+export function delAdminById (param, successResponse, errorResponse) {
   requestGet(`/api/user/v1/admin_delete/${param.user_id}`, param, apiBaseURL, successResponse, errorResponse)
 }
 
